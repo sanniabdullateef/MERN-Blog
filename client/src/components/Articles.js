@@ -1,23 +1,30 @@
 import React from 'react'
 import styled from 'styled-components';
 import spinner from '../spinner1.gif'
+import { Link } from 'react-router-dom'
 
 const Articles = ({posts}) => {
     return (
         <MainContainer>
             {!posts.length ? <img src={spinner} alt="loading..."/>:
          posts.map((article, key) => (
-             <div className='container'>
+             <div className='container' key={key}>
              <h2>{article.title}</h2>
          <p>{article.article}</p>
          <span className='badge badge-secondary p-2'>{article.authorname}
          </span>
-         <div class="row my-3">
+         <div className="row my-3">
             <div className="col-sm-2">
-              <a href="" className="btn btn-outline-success">Edit Article</a>    
+              <Link to="/edit-article" 
+              className="btn btn-outline-success">
+                  Edit Article
+                </Link>    
+
             </div>
             <div className="col-sm-2">
-                <a href="" className="btn btn-outline-danger">Delete Articles</a>
+                <button to="/" className="btn btn-outline-danger">
+                    Delete Articles
+                </button>
             </div>
          </div>
          <hr />
