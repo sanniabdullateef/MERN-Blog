@@ -1,8 +1,8 @@
-import React, {useState}  from 'react'
+import React, {useState, useEffect}  from 'react'
 import styled from 'styled-components';
 import axios from 'axios';
 
-function AddArticle() {
+function EditArticle(props) {
     const [title, setTitle] = useState('');
     const [article, setArticle] = useState('');
     const [authorname, setAuthorname] = useState('');
@@ -22,18 +22,28 @@ function AddArticle() {
         setAuthorname('');
 
         axios
-        .post('/articles/add', articles)
+        .put(`/articles/update/${props.match.params.id}`, articles)
         .then(res => setMessage(res.data))
         .catch(err => {
             console.log(err);
-        })
-    }
+        });
+    };
+
+    useEffect(() => {
+        axios.get(`/articles/${props.match.params.id}`)
+        .then(res => [
+            setTitle(res.data.title),
+            setArticle(res.data.article),
+            setAuthorname(res.data.authorname)
+        ])
+        .catch(error => console.log(error));
+    }, []);
 
     return (
-        <AddArticleContainer>
+        <EditArticleContainer>
         <div className="container">
-            <h1>Add Article</h1>
-            <span className="message">{message}</span>
+            <h1>Update Article</h1>
+    <span className="message">{message}</span>
         <form onSubmit={changeOnClick} encType="multipart/form-data">
      <div className="form-group">
        <label htmlFor="authorname">Author Name</label>
@@ -62,18 +72,18 @@ function AddArticle() {
      rows="3">
      </textarea>
   </div>
-     <button type="submit" className="btn btn-primary">Post Article</button>
+     <button type="submit" className="btn btn-primary">Update Article</button>
  </form>
  </div>
-</AddArticleContainer>
+</EditArticleContainer>
     )
 }
 
-export default AddArticle
+export default EditArticle
 
 // css for addarticles
 
-const AddArticleContainer = styled.div`
+const EditArticleContainer = styled.div`
   margin: 3rem auto;
   padding: 4rem;
   width: 31.25rem;
@@ -93,8 +103,8 @@ const AddArticleContainer = styled.div`
   }
 
   .message {
-    font-weight:900;
-    color: tomato;
-    padding: 1rem 1rem 1rem 0;
-}
+      font-weight:900;
+      color: tomato;
+      padding: 1rem 1rem 1rem 0;
+  }
 `;
